@@ -1,12 +1,14 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
-
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  constructor(@Inject('MQTT_SERVICE') private client: ClientProxy) {}
+  @Get('notifications')
+  getNotifications() {
+    return this.client.send(
+      'notification_channel',
+      "It's a Message From Client",
+    );
   }
 }
