@@ -1,5 +1,10 @@
 import { Controller } from '@nestjs/common';
-import { MessagePattern, Payload } from '@nestjs/microservices';
+import {
+  Ctx,
+  MessagePattern,
+  MqttContext,
+  Payload,
+} from '@nestjs/microservices';
 
 @Controller('math')
 export class MqttController {
@@ -10,8 +15,9 @@ export class MqttController {
   }
 
   @MessagePattern('notification_channel_b')
-  getNotificationsB(@Payload() data) {
+  getNotificationsB(@Payload() data, @Ctx() context: MqttContext) {
     console.log(data);
+    console.log(`Topic: ${context.getTopic()}`);
     return `I Got Message From Client with channel b: ${data}`;
   }
 }
